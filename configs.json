@@ -1,0 +1,15 @@
+{
+  "input": "./src/**/*",
+  "output": "./dist/",
+  
+  "styles": {
+    "input": "./src/sass/**/*.{scss,sass}",
+    "output": "./dist/css/"
+  },
+
+  "scripts": {
+    "input": "./src/js/*",
+    "output": "./dist/js/",
+    "lint": "./src/js/**"
+  }
+}
