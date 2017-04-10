@@ -9,6 +9,7 @@ import header from 'gulp-header';
 import del from 'del';
 import tap from 'gulp-tap';
 import lazypipe from 'lazypipe';
+import browserSync from 'browser-sync';
 
 //JS
 import concat from 'gulp-concat';
@@ -46,10 +47,22 @@ gulp.task('clean:dist', () => {
   ]);
 });
 
+// Remove prexisting content from docs folder
+gulp.task('clean:docs', () => {
+  return del.sync(`${configs.demo.output}/dist/`);
+});
+
+// Copy distribution files to docs
+gulp.task('copy:dist', ['compile', 'clean:docs'], () => {
+  return gulp.src(configs.output + '/**')
+    .pipe(plumber())
+    .pipe(gulp.dest(configs.demo.output + '/dist'));
+});
+
 // Process, lint, and minify Sass files
 gulp.task('build:styles', ['clean:dist'], () => {
   return gulp.src(configs.styles.input)
-    .pipe(plumber())    
+    .pipe(plumber())
     .pipe(sass({
       outputStyle: 'expanded',
       sourceComments: true
@@ -59,10 +72,10 @@ gulp.task('build:styles', ['clean:dist'], () => {
       browsers: ['last 2 version', '> 1%'],
       cascade: true,
       remove: true
-    }))    
+    }))
     .pipe(header(headerCredits.full, {
       package: packages
-    }))    
+    }))
     .pipe(gulp.dest(configs.styles.output))
     .pipe(rename({
       suffix: '.min'
@@ -80,25 +93,39 @@ gulp.task('build:styles', ['clean:dist'], () => {
 
 // Lint, minify, and concatenate scripts
 gulp.task('build:scripts', ['clean:dist'], () => {
-    var jsTasks = lazypipe()
-        .pipe(header, headerCredits.full, { package : packages })
-        .pipe(gulp.dest, configs.scripts.output)
-        .pipe(rename, { suffix: '.min' })
-        .pipe(uglify)
-        .pipe(header, headerCredits.min, { package : packages })
-        .pipe(gulp.dest, configs.scripts.output)        
+  var jsTasks = lazypipe()
+    .pipe(header, headerCredits.full, {
+      package: packages
+    })
+    .pipe(gulp.dest, configs.scripts.output)
+    .pipe(rename, {
+      suffix: '.min'
+    })
+    .pipe(uglify)
+    .pipe(header, headerCredits.min, {
+      package: packages
+    })
+    .pipe(gulp.dest, configs.scripts.output)
 
-    return gulp.src(configs.scripts.input)
-        .pipe(plumber())
-        .pipe(tap(function (file, t) {
-            if ( file.isDirectory() ) {
-                var name = file.relative + '.js';
-                return gulp.src(file.path + '/*.js')
-                    .pipe(concat(name))
-                    .pipe(jsTasks());
-            }
-        }))
-        .pipe(jsTasks());
+  return gulp.src(configs.scripts.input)
+    .pipe(plumber())
+    .pipe(tap(function (file, t) {
+      if (file.isDirectory()) {
+        var name = file.relative + '.js';
+        return gulp.src(file.path + '/*.js')
+          .pipe(concat(name))
+          .pipe(jsTasks());
+      }
+    }))
+    .pipe(jsTasks());
 });
 
-gulp.task('default', ['build:styles', 'build:scripts']);
+gulp.task('build:demo', ['copy:dist', 'listen:demo']);
+
+gulp.task('listen:demo', ['build:styles'], () => {
+  browserSync.init({
+    server: configs.demo.output
+  });  
+});
+
+gulp.task('compile', ['build:scripts', 'build:styles']);
