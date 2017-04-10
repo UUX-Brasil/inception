@@ -82,13 +82,13 @@ gulp.task('build:styles', ['clean:dist'], () => {
 gulp.task('build:scripts', ['clean:dist'], () => {
     var jsTasks = lazypipe()
         .pipe(header, headerCredits.full, { package : packages })
-        .pipe(gulp.dest, configs.output)
+        .pipe(gulp.dest, configs.scripts.output)
         .pipe(rename, { suffix: '.min' })
         .pipe(uglify)
         .pipe(header, headerCredits.min, { package : packages })
-        .pipe(gulp.dest, configs.output)        
+        .pipe(gulp.dest, configs.scripts.output)        
 
-    return gulp.src(configs.input)
+    return gulp.src(configs.scripts.input)
         .pipe(plumber())
         .pipe(tap(function (file, t) {
             if ( file.isDirectory() ) {
@@ -100,3 +100,5 @@ gulp.task('build:scripts', ['clean:dist'], () => {
         }))
         .pipe(jsTasks());
 });
+
+gulp.task('default', ['build:styles', 'build:scripts']);
