@@ -56,7 +56,8 @@ gulp.task('clean:docs', () => {
 gulp.task('copy:dist', ['compile', 'clean:docs'], () => {
   return gulp.src(configs.output + '/**')
     .pipe(plumber())
-    .pipe(gulp.dest(configs.demo.output + '/dist'));
+    .pipe(gulp.dest(configs.demo.output + '/dist'))
+    .pipe(browserSync.stream());
 });
 
 // Process, lint, and minify Sass files
@@ -125,7 +126,10 @@ gulp.task('build:demo', ['copy:dist', 'listen:demo']);
 gulp.task('listen:demo', ['build:styles'], () => {
   browserSync.init({
     server: configs.demo.output
-  });  
+  });
+
+  gulp.watch(configs.styles.input, ['build:styles','copy:dist']);
+  gulp.watch('demo/*.html').on('change', browserSync.reload);  
 });
 
 gulp.task('compile', ['build:scripts', 'build:styles']);
