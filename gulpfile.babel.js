@@ -121,14 +121,15 @@ gulp.task('build:scripts', ['clean:dist'], () => {
     .pipe(jsTasks());
 });
 
-gulp.task('build:demo', ['copy:dist', 'listen:demo']);
+gulp.task('build:demo', ['compile', 'copy:dist', 'listen:demo']);
 
-gulp.task('listen:demo', ['build:styles'], () => {
+gulp.task('listen:demo', () => {
   browserSync.init({
     server: configs.demo.output
   });
 
   gulp.watch(configs.styles.input, ['build:styles','copy:dist']);
+  gulp.watch(configs.scripts.input, ['build:scripts','copy:dist']);
   gulp.watch('demo/*.html').on('change', browserSync.reload);  
 });
 
