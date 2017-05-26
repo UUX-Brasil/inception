@@ -1,13 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" type="text/css" href="dist/css/app.css">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css" href="dist/css/inception.css">
+  <script type="text/javascript" src="dist/js/inception.js"></script>
+  <title>Document</title>
 </head>
+
 <body>
-    hellow  22
+  <button id="callModal">Chamar modal</button>
+  <script type="text/javascript">
+  document.getElementById('callModal').addEventListener("click", function(event) {
+    inception.create({
+      innerHTML: '<span>Hello world!</span>',
+	    selector: document.body,
+      overlayColor: '#f66',
+      opacity: 0.7
+    });
+  });
+</script>
 </body>
+
 </html>
