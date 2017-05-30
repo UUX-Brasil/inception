@@ -10,14 +10,24 @@
 
   // Variables
 
-  var inception = {},
-    overlayClass = 'inception-overlay';
+  var inception     = {},
+      mainClass     = 'inception-modal',
+      mainId        = 'modal',
+      overlayClass  = 'inception-overlay',
+      contentClass  = 'inception-content';
+
+
 
   // Prototypes functions
 
   Element.prototype.remove = function () {
     this.parentElement.removeChild(this);
   }
+
+  Element.prototype.show = function () {
+    document.body.appendChild(this);
+  }
+
   NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
     for (var i = this.length - 1; i >= 0; i--) {
       if (this[i] && this[i].parentElement)
@@ -42,27 +52,74 @@
     } : null;
   }
 
+  // Default config
+
+  var _default = {
+      id: 0,
+      innerHTML: '<span>Hello world!</span>',
+      selector: document.body,
+      height: 'auto',
+      width: 'auto',
+      fullScreen: false,
+      opacity: 0.5,
+      overlayColor: '#FFF',
+      position: 'center',
+      onClickOut: function() {		
+        return false;
+      },
+      onCreate: function() {
+        return false;
+      },
+      onOpen: function() {
+        return false;
+      },	
+      onClose: function() {
+        return false;
+      },
+      onDestroy: function() {
+        return false;
+      }
+  };
+
+
   // Private functions
 
-  var _createOverlay = function (selector, overlayColor, opacity) {
-    if (document.getElementsByClassName('inception-overlay').length === 0) {
-      if (!overlayColor)
-        overlayColor = '#000';
-
-      if (!opacity)
-        opacity = parseFloat('0.5');
-      else
-        opacity = parseFloat(opacity);
-
-      var overlay = document.createElement('div');
-
+  var _createOverlay = function (overlayColor, opacity) {
+      opacity = parseFloat(opacity);
+      var $overlay = document.createElement('div');
       overlayColor = _hexToRgb(overlayColor);
 
-      overlay.className = overlayClass;
-      overlay.style.backgroundColor = 'rgba(' + overlayColor.r + ',' + overlayColor.g + ',' + overlayColor.b + ',' + opacity + ')';
-      
-      selector.appendChild(overlay);
-    }
+      $overlay.className = overlayClass;
+      $overlay.style.backgroundColor = 'rgba(' + overlayColor.r + ',' + overlayColor.g + ',' + overlayColor.b + ',' + opacity + ')';
+
+      return $overlay;
+  }
+
+  var _createContent = function(config) {
+    var $content = document.createElement('div');
+    $content.className = contentClass;
+    $content.innerHTML = config.innerHTML;
+
+    return $content;
+  }
+
+  var _createModal = function(config) {
+    var modalId = _getMainId(config.id);
+    var $currentInception = document.createElement('div');
+    $currentInception.className = mainClass;
+    $currentInception.id = modalId;
+
+    var $overlay = _createOverlay(config.overlayColor, config.opacity);
+    var $content = _createContent(config);
+
+    $currentInception.appendChild($overlay);
+    $currentInception.appendChild($content);
+
+    return $currentInception;
+  }
+
+  var _getMainId = function(id) {
+    return mainId + id;
   }
 
   var _destroyOverlay = function () {
@@ -70,10 +127,27 @@
       document.getElementsByClassName('inception-overlay').remove();
   }
 
+  var _getConfig = function(config) {
+      var _destinationConfig = {};
+      Object.assign(_destinationConfig, _default, config);
+
+      _destinationConfig.id = new Date().getTime();
+
+      return _destinationConfig;
+  }
+
+
+  
+
   // Methods
 
-  inception.create = function (configs) {
-    _createOverlay(configs.selector, configs.overlayColor, configs.opacity);
+  inception.create = function (config) {
+    var _currentConfig = _getConfig(config);
+    console.log(_currentConfig);
+    // var $modal = _createModal(config);
+    // var inceptionModal = _createInception($modal, config);
+
+    return _createModal(_currentConfig);
   }
 
   inception.destroy = function () {
