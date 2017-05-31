@@ -7,6 +7,43 @@
     root.inception = factory(root);
   }
 })(typeof global !== 'undefined' ? global : this.window || this.global, function (root) {
+  
+  // Inception Object
+
+var inceptionObject = function(){};
+
+inceptionObject.prototype.show = function(selector) {
+  var _self = this;
+  if(!selector)
+    selector = _self.config.selector;
+
+  selector.appendChild(_self.modalHtml);
+}
+
+inceptionObject.prototype.close = function(){
+  var _self = this;
+  var $currentModal = document.getElementById(_self.config.idDOM)
+
+  if($currentModal)
+    $currentModal.remove();  
+  else  
+    throw 'Modal not found!';  
+
+}
+
+inceptionObject.prototype.config = {};
+inceptionObject.prototype.modalHtml = '';
+
+
+function _inceptionObject(config, modalHtml) {
+    var _currentInceptionObject = new inceptionObject();
+    _currentInceptionObject.config = config;
+    _currentInceptionObject.modalHtml = modalHtml;
+
+    return _currentInceptionObject;
+}
+
+
 
   // Variables
 
@@ -56,6 +93,7 @@
 
   var _default = {
       id: 0,
+      idDOM: '',
       innerHTML: '<span>Hello world!</span>',
       selector: document.body,
       height: 'auto',
@@ -103,11 +141,10 @@
     return $content;
   }
 
-  var _createModal = function(config) {
-    var modalId = _getMainId(config.id);
+  var _createModalHtml = function(config) {
     var $currentInception = document.createElement('div');
     $currentInception.className = mainClass;
-    $currentInception.id = modalId;
+    $currentInception.id = config.idDOM;
 
     var $overlay = _createOverlay(config.overlayColor, config.opacity);
     var $content = _createContent(config);
@@ -132,6 +169,7 @@
       Object.assign(_destinationConfig, _default, config);
 
       _destinationConfig.id = new Date().getTime();
+      _destinationConfig.idDOM = _getMainId(_destinationConfig.id);
 
       return _destinationConfig;
   }
@@ -144,10 +182,9 @@
   inception.create = function (config) {
     var _currentConfig = _getConfig(config);
     console.log(_currentConfig);
-    // var $modal = _createModal(config);
-    // var inceptionModal = _createInception($modal, config);
+    var $htmlModal = _createModalHtml(_currentConfig);
 
-    return _createModal(_currentConfig);
+    return _inceptionObject(_currentConfig, $htmlModal);
   }
 
   inception.destroy = function () {
