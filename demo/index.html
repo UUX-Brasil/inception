@@ -14,12 +14,13 @@
   <button id="callModal">Chamar modal</button>
   <script type="text/javascript">
   document.getElementById('callModal').addEventListener("click", function(event) {
-    inception.create({
-      innerHTML: '<span>Hello world!</span>',
+    var myModal = inception.create({
+      innerHTML: '<h2 color="#FFF">Hello world!</h2>',
 	    selector: document.body,
-      overlayColor: '#f66',
+      overlayColor: '#000',
       opacity: 0.7
     });
+    myModal.show();
   });
 </script>
 </body>
