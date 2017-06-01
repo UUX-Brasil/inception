@@ -5,7 +5,33 @@
  * git+https://github.com/UUX-Brasil/inception.git
  */
 
-/* line 1, src/sass/inception.scss */
+/* line 2, src/sass/base.scss */
+.inception-modal {
+  z-index: 3;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: auto;
+  -webkit-animation: fadein 2s;
+          animation: fadein 2s;
+}
+
+/* line 9, src/sass/base.scss */
+.inception-modal .inception-content {
+  position: relative;
+  z-index: 3;
+  background-color: #eee;
+  box-shadow: 0px 3px 14px 0px rgba(0, 0, 0, 0.75);
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+/* line 2, src/sass/reset.scss */
+.inception-modal h2 {
+  margin: 0;
+}
+
+/* line 1, src/sass/features/overlay.scss */
 .inception-overlay {
   position: fixed;
   display: block;
@@ -19,45 +45,22 @@
   z-index: 2;
 }
 
-/* line 14, src/sass/inception.scss */
-.inception-modal {
-  z-index: 3;
-  position: absolute;
-  left: 50%;
-  width: auto;
-  -webkit-animation: fadein 2s;
-  /* Safari, Chrome and Opera > 12.1 */
-  /* Firefox < 16 */
-  /* Internet Explorer */
-  /* Opera < 12.1 */
-  animation: fadein 2s;
-}
-
-/* line 24, src/sass/inception.scss */
-.inception-modal .inception-content {
-  position: relative;
-  left: -50%;
-  z-index: 3;
-  background-color: #fff;
-  box-shadow: 0px 3px 14px 0px rgba(0, 0, 0, 0.75);
-}
-
-/* line 33, src/sass/inception.scss */
+/* line 2, src/sass/features/full-screen.scss */
 .inception-modal.full-screen {
   top: 0;
   left: 0;
   width: 100%;
+  -webkit-transform: scale(1);
+          transform: scale(1);
+  -webkit-transition: 0.2s linear;
+  transition: 0.2s linear;
 }
 
-/* line 37, src/sass/inception.scss */
+/* line 8, src/sass/features/full-screen.scss */
 .inception-modal.full-screen .inception-content {
-  left: 0;
   height: 100vh;
-}
-
-/* line 42, src/sass/inception.scss */
-.inception-modal h2 {
-  margin: 0;
+  -webkit-transform: translate(0, 0);
+          transform: translate(0, 0);
 }
 
 @keyframes fadein {

@@ -53,7 +53,7 @@ gulp.task('clean:docs', () => {
 });
 
 // Copy distribution files to docs
-gulp.task('copy:dist', ['compile', 'clean:docs'], () => {
+gulp.task('copy:dist', ['compile'], () => {
   return gulp.src(configs.output + '/**')
     .pipe(plumber())
     .pipe(gulp.dest(configs.demo.output + '/dist'))
@@ -62,7 +62,7 @@ gulp.task('copy:dist', ['compile', 'clean:docs'], () => {
 
 // Process, lint, and minify Sass files
 gulp.task('build:styles', ['clean:dist'], () => {
-  return gulp.src(configs.styles.input)
+  return gulp.src(configs.styles.main)
     .pipe(plumber())
     .pipe(sass({
       outputStyle: 'expanded',
@@ -108,7 +108,7 @@ gulp.task('build:scripts', ['clean:dist'], () => {
     })
     .pipe(gulp.dest, configs.scripts.output)
 
-  return gulp.src(configs.scripts.input)
+  return gulp.src(configs.scripts.main)
     .pipe(plumber())
     .pipe(tap(function (file, t) {
       if (file.isDirectory()) {
