@@ -16,7 +16,7 @@
   },
 
   "demo": {    
-    "output": "./demo/",
-    "html": "demo/**/*.html"        
+    "output": "./docs/",
+    "html": "docs/**/*.html"        
   }
 }
