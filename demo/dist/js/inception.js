@@ -25,6 +25,8 @@
       selector = _self.config.selector;
 
     selector.appendChild(_self.modalHtml);
+
+    _self.config.onOpen();
   }
 
   inceptionObject.prototype.close = function () {
@@ -36,7 +38,27 @@
     else
       throw 'Modal not found!';
 
+      _self.config.onClose();
   }
+
+  inceptionObject.prototype.closeOverlay = function () {
+    var _self = this;
+    var $currentModal = document.getElementById(_self.config.idDOM);
+
+    var $currentOverlay = $currentModal.getElementsByClassName(overlayClass)[0];
+    
+    $currentOverlay.style.display = 'none';
+  }
+
+  inceptionObject.prototype.openOverlay = function () {
+    var _self = this;
+    var $currentModal = document.getElementById(_self.config.idDOM);
+
+    var $currentOverlay = $currentModal.getElementsByClassName(overlayClass)[0];
+    
+    $currentOverlay.style.display = 'block';
+  }
+  
 
   inceptionObject.prototype.config = {};
   inceptionObject.prototype.modalHtml = '';
@@ -172,6 +194,9 @@
     $currentInception.appendChild($overlay);
     $currentInception.appendChild($content);
 
+    // Add ClickoutEvent
+    $currentInception.getElementsByClassName(overlayClass)[0].addEventListener('click', config.onClickOut);
+
     return $currentInception;
   }
 
@@ -199,7 +224,6 @@
 
   inception.create = function (config) {
     var _currentConfig = _getConfig(config);
-    console.log(_currentConfig);
     var $htmlModal = _createModalHtml(_currentConfig);
 
     return _inceptionObject(_currentConfig, $htmlModal);
@@ -207,6 +231,14 @@
 
   inception.destroy = function () {
     _destroyOverlay();
+  }
+
+  inception.close = function(id) {
+    console.log(id);
+    var $mainObj = document.getElementById(id);
+
+    console.log($mainObj);
+    $mainObj.remove();
   }
 
   return inception;
