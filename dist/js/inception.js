@@ -234,10 +234,7 @@
   }
 
   inception.close = function(id) {
-    console.log(id);
     var $mainObj = document.getElementById(id);
-
-    console.log($mainObj);
     $mainObj.remove();
   }
 
