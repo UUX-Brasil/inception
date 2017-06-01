@@ -1,0 +1,13 @@
+.inception-modal {
+  &.full-screen {
+    top: 0;
+    left: 0;
+    width: 100%;
+    transform: scale(1);
+    transition: 0.2s linear;
+    .inception-content {      
+      height: 100vh;
+      transform: translate(0, 0);
+    }
+  }
+}
