@@ -1,0 +1,22 @@
+{
+  "input": "./src/**/*",
+  "output": "./dist/",
+  
+  "styles": {
+    "main": "./src/sass/inception.scss",
+    "input": "./src/sass/**/*.{scss,sass}",
+    "output": "./dist/css/"
+  },
+
+  "scripts": {
+    "main": "./src/js/inception.js",
+    "input": "./src/js/*",
+    "output": "./dist/js/",
+    "lint": "./src/js/**"
+  },
+
+  "demo": {    
+    "output": "./docs/",
+    "html": "docs/**/*.html"        
+  }
+}

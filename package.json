@@ -1,0 +1,46 @@
+{
+  "name": "inception",
+  "version": "1.0.0",
+  "description": "Inception Modal Plugin",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "gulp build:demo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UUX-Brasil/inception.git"
+  },
+  "keywords": [
+    "modal"
+  ],
+  "author": "Agile Content",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/UUX-Brasil/inception/issues"
+  },
+  "homepage": "https://github.com/UUX-Brasil/inception#readme",
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-core": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "browser-sync": "^2.18.8",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-flatten": "^0.3.1",
+    "gulp-header": "^1.8.8",
+    "gulp-jshint": "^2.0.4",
+    "gulp-jslint": "^1.0.10",
+    "gulp-plumber": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.5.1",
+    "gulp-tap": "^0.1.3",
+    "gulp-uglify": "^2.1.2",
+    "jshint-stylish": "^2.2.1",
+    "lazypipe": "^1.0.1"
+  }
+}
