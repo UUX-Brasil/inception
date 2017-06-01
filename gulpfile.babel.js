@@ -130,7 +130,7 @@ gulp.task('listen:demo', () => {
 
   gulp.watch(configs.styles.input, ['build:styles','copy:dist']);
   gulp.watch(configs.scripts.input, ['build:scripts','copy:dist']);
-  gulp.watch('demo/*.html').on('change', browserSync.reload);  
+  gulp.watch('docs/*.html').on('change', browserSync.reload);  
 });
 
 gulp.task('compile', ['build:scripts', 'build:styles']);
