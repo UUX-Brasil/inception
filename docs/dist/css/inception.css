@@ -52,6 +52,7 @@
   width: 100%;
   -webkit-transform: scale(1);
           transform: scale(1);
+  -webkit-transition: 0.2s linear;
   transition: 0.2s linear;
 }
 

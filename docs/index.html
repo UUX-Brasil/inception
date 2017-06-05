@@ -20,6 +20,14 @@
 	    selector: document.body,
       overlayColor: '#000',
       opacity: 0.7,
+      responsive: {
+        320: {
+          fullScreen: true
+        },
+        768: {
+          fullScreen: false
+        }
+      },
       onOpen: function (){
         var _self = this;
         document.getElementById('btnInceptionClose').addEventListener('click', function (){
@@ -46,7 +54,7 @@
       }
     });
     
-    myModal.show();
+    myModal.show();    
   });
 </script>
 </body>
