@@ -166,7 +166,7 @@
   var _createContent = function (config) {
     var $content = document.createElement('div');
     $content.className = contentClass;
-    $content.innerHTML = config.innerHTML;    
+    $content.innerHTML = config.innerHTML;
 
     return $content;
   }
@@ -220,38 +220,61 @@
 
     return _destinationConfig;
   }
-  
-  var _getBreakpointRange = function(breakpoint) {
-    console.log(breakpoint);  
+
+  var _sortNumber = function (a, b) {
+    return a - b;
   }
+
+  var _getBreakpointRange = function (breakpoint) {
+
+    var breakpointsRange = [320, 768, 990, 1200];
+
+    breakpointsRange.push(breakpoint);
+    breakpointsRange.sort(_sortNumber);
+
+    breakpointsRange = breakpointsRange.filter(function (elem, index, self) {
+      return index == self.indexOf(elem);
+    })
+
+    var nextBreakpoint = breakpointsRange.indexOf(breakpoint) + 1;
+    return breakpointsRange[nextBreakpoint];
+  }
+
+  var _responsiveModalProps = function (config, $currentModal, breakpoint) {
+    breakpoint = parseInt(breakpoint);
+    var maxBreakpoint = _getBreakpointRange(breakpoint),
+      currentBreakpoint = config.responsive[breakpoint],
+      width = config.width,
+      height = config.height,
+      fullScreen = config.fullScreen;
+
+    if (breakpoint < 1200) {
+      if (window.innerWidth > breakpoint && window.innerWidth < maxBreakpoint) {
+        if (currentBreakpoint.width !== undefined)
+          width = currentBreakpoint.width;
+        if (currentBreakpoint.height !== undefined)
+          height = currentBreakpoint.height;
+        if (currentBreakpoint.fullScreen)
+          fullScreen = currentBreakpoint.fullScreen;
+      }
+
+      _setModalStyles(
+        $currentModal,
+        width,
+        height,
+        fullScreen
+      );
+    }
+  }
+
 
   var _resizeModalListener = function (config, $currentModal) {
     var breakpoints = Object.keys(config.responsive);
 
     breakpoints.forEach(function (breakpoint) {
+      _responsiveModalProps(config, $currentModal, breakpoint);
       window.addEventListener('resize', function () {
-          breakpoint = parseInt(breakpoint);
-          var maxBreakpoint = _getBreakpointRange(breakpoint), 
-            currentBreakpoint = config.responsive[breakpoint],
-            width = config.width,
-            height = config.height,
-            fullScreen = config.fullScreen;
-
-          if (window.innerWidth === breakpoint) {
-            if(currentBreakpoint.width !== undefined)
-              width = currentBreakpoint.width;
-            if(currentBreakpoint.height !== undefined)
-              height = currentBreakpoint.height;
-            if(currentBreakpoint.fullScreen)
-              fullScreen = currentBreakpoint.fullScreen;
-
-            _setModalStyles(
-              $currentModal,
-              width,
-              height,
-              fullScreen
-            );
-          }
+        _responsiveModalProps(config, $currentModal, breakpoint);
       }, this)
     }, this);
   }
