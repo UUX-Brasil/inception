@@ -10,6 +10,7 @@ import del from 'del';
 import tap from 'gulp-tap';
 import lazypipe from 'lazypipe';
 import browserSync from 'browser-sync';
+import eslint from 'gulp-eslint';
 
 //JS
 import concat from 'gulp-concat';
@@ -60,6 +61,7 @@ gulp.task('copy:dist', ['compile'], () => {
     .pipe(browserSync.stream());
 });
 
+
 // Process, lint, and minify Sass files
 gulp.task('build:styles', ['clean:dist'], () => {
   return gulp.src(configs.styles.main)
@@ -93,7 +95,7 @@ gulp.task('build:styles', ['clean:dist'], () => {
 });
 
 // Lint, minify, and concatenate scripts
-gulp.task('build:scripts', ['clean:dist'], () => {
+gulp.task('build:scripts', ['clean:dist', 'lint:scripts'], () => {
   var jsTasks = lazypipe()
     .pipe(header, headerCredits.full, {
       package: packages
@@ -121,6 +123,14 @@ gulp.task('build:scripts', ['clean:dist'], () => {
     .pipe(jsTasks());
 });
 
+gulp.task('lint:scripts', () => {
+  return gulp.src(configs.scripts.lint)
+    .pipe(plumber())
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
+});
+
 gulp.task('build:demo', ['compile', 'copy:dist', 'listen:demo']);
 
 gulp.task('listen:demo', () => {
@@ -128,9 +138,9 @@ gulp.task('listen:demo', () => {
     server: configs.demo.output
   });
 
-  gulp.watch(configs.styles.input, ['build:styles','copy:dist']);
-  gulp.watch(configs.scripts.input, ['build:scripts','copy:dist']);
-  gulp.watch('docs/*.html').on('change', browserSync.reload);  
+  gulp.watch(configs.styles.input, ['build:styles', 'copy:dist']);
+  gulp.watch(configs.scripts.input, ['build:scripts', 'copy:dist']);
+  gulp.watch('docs/*.html').on('change', browserSync.reload);
 });
 
 gulp.task('compile', ['build:scripts', 'build:styles']);

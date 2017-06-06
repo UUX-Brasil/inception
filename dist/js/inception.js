@@ -6,14 +6,16 @@
  */
 
 (function (root, factory) {
-  if (typeof define === 'function' && define.amd) {
+  if (typeof define === 'function' && define.amd)
     define([], factory(root));
-  } else if (typeof exports === 'object') {
+  else if (typeof exports === 'object')
     module.exports = factory(root);
-  } else {
+  else
     root.inception = factory(root);
-  }
 })(typeof global !== 'undefined' ? global : this.window || this.global, function (root) {
+
+  // Errors
+
 
   // Inception Object
 
@@ -30,11 +32,11 @@
     selector.appendChild(_self.modalHtml);
 
     _self.config.onOpen();
-  }
+  };
 
   inceptionObject.prototype.close = function () {
     var _self = this;
-    var $currentModal = document.getElementById(_self.config.idDOM)
+    var $currentModal = document.getElementById(_self.config.idDOM);
 
     if ($currentModal)
       $currentModal.remove();
@@ -42,7 +44,7 @@
       throw 'Modal not found!';
 
     _self.config.onClose();
-  }
+  };
 
   inceptionObject.prototype.closeOverlay = function () {
     var _self = this;
@@ -51,7 +53,7 @@
     var $currentOverlay = $currentModal.getElementsByClassName(overlayClass)[0];
 
     $currentOverlay.style.display = 'none';
-  }
+  };
 
   inceptionObject.prototype.openOverlay = function () {
     var _self = this;
@@ -60,7 +62,7 @@
     var $currentOverlay = $currentModal.getElementsByClassName(overlayClass)[0];
 
     $currentOverlay.style.display = 'block';
-  }
+  };
 
 
   inceptionObject.prototype.config = {};
@@ -118,18 +120,18 @@
 
   Element.prototype.remove = function () {
     this.parentElement.removeChild(this);
-  }
+  };
 
   Element.prototype.show = function () {
     document.body.appendChild(this);
-  }
+  };
 
   NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
     for (var i = this.length - 1; i >= 0; i--) {
       if (this[i] && this[i].parentElement)
         this[i].parentElement.removeChild(this[i]);
     }
-  }
+  };
 
   // Helpers
 
@@ -146,7 +148,7 @@
       g: parseInt(result[2], 16),
       b: parseInt(result[3], 16)
     } : null;
-  }
+  };
 
 
   // Private functions
@@ -157,7 +159,7 @@
     configs = Object.assign(configs, oldConfig, newConfig);
 
     return configs;
-  }
+  };
 
   var _createOverlay = function (overlayColor, opacity) {
     opacity = parseFloat(opacity);
@@ -165,10 +167,13 @@
     overlayColor = _hexToRgb(overlayColor);
 
     $overlay.className = overlayClass;
-    $overlay.style.backgroundColor = 'rgba(' + overlayColor.r + ',' + overlayColor.g + ',' + overlayColor.b + ',' + opacity + ')';
+    $overlay.style.backgroundColor = 'rgba(' + overlayColor.r + ',' +
+      overlayColor.g + ',' +
+      overlayColor.b + ',' +
+      opacity + ')';
 
     return $overlay;
-  }
+  };
 
   var _createContent = function (config) {
     var $content = document.createElement('div');
@@ -176,7 +181,7 @@
     $content.innerHTML = config.innerHTML;
 
     return $content;
-  }
+  };
 
   var _setModalStyles = function ($currentModal, width, height, fullScreen) {
     var $content = $currentModal.getElementsByClassName(contentClass)[0];
@@ -188,11 +193,11 @@
     } else {
       $content.style.width = '100%';
       $content.style.height = '100vh';
-      
+
       if (!$currentModal.classList.contains(fullScreenClass))
         $currentModal.className += ' ' + fullScreenClass;
     }
-  }
+  };
 
   var _createModalHtml = function (config) {
     var $currentInception = document.createElement('div');
@@ -209,16 +214,16 @@
     $currentInception.getElementsByClassName(overlayClass)[0].addEventListener('click', config.onClickOut);
 
     return $currentInception;
-  }
+  };
 
   var _getMainId = function (id) {
     return mainId + id;
-  }
+  };
 
   var _destroyOverlay = function () {
     if (document.getElementsByClassName('inception-overlay').length === 1)
       document.getElementsByClassName('inception-overlay').remove();
-  }
+  };
 
   var _getConfig = function (config) {
     var _destinationConfig = {};
@@ -228,11 +233,11 @@
     _destinationConfig.idDOM = _getMainId(_destinationConfig.id);
 
     return _destinationConfig;
-  }
+  };
 
   var _sortNumber = function (a, b) {
     return a - b;
-  }
+  };
 
   var _getBreakpointRange = function (breakpoint) {
 
@@ -243,11 +248,11 @@
 
     breakpointsRange = breakpointsRange.filter(function (elem, index, self) {
       return index == self.indexOf(elem);
-    })
+    });
 
     var nextBreakpoint = breakpointsRange.indexOf(breakpoint) + 1;
     return breakpointsRange[nextBreakpoint];
-  }
+  };
 
   var _responsiveModalProps = function (config, $currentModal, breakpoint) {
     breakpoint = parseInt(breakpoint);
@@ -274,7 +279,7 @@
         fullScreen
       );
     }
-  }
+  };
 
 
   var _resizeModalListener = function (config, $currentModal) {
@@ -284,9 +289,9 @@
       _responsiveModalProps(config, $currentModal, breakpoint);
       window.addEventListener('resize', function () {
         _responsiveModalProps(config, $currentModal, breakpoint);
-      }, this)
+      }, this);
     }, this);
-  }
+  };
 
 
   // Methods
@@ -298,16 +303,16 @@
     _setModalStyles($htmlModal, _currentConfig.width, _currentConfig.height, _currentConfig.fullScreen);
 
     return _inceptionObject(_currentConfig, $htmlModal);
-  }
+  };
 
   inception.destroy = function () {
     _destroyOverlay();
-  }
+  };
 
   inception.close = function (id) {
     var $mainObj = document.getElementById(id);
     $mainObj.remove();
-  }
+  };
 
   return inception;
 
