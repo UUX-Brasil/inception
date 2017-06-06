@@ -188,7 +188,9 @@
     } else {
       $content.style.width = '100%';
       $content.style.height = '100vh';
-      $currentModal.className += ' ' + fullScreenClass;
+      
+      if (!$currentModal.classList.contains(fullScreenClass))
+        $currentModal.className += ' ' + fullScreenClass;
     }
   }
 
