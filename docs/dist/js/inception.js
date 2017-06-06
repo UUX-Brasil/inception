@@ -24,6 +24,9 @@
     if (!selector)
       selector = _self.config.selector;
 
+    if (_self.config.responsive)
+      _resizeModalListener(_self.config, _self.modalHtml);
+
     selector.appendChild(_self.modalHtml);
 
     _self.config.onOpen();
@@ -38,7 +41,7 @@
     else
       throw 'Modal not found!';
 
-      _self.config.onClose();
+    _self.config.onClose();
   }
 
   inceptionObject.prototype.closeOverlay = function () {
@@ -46,7 +49,7 @@
     var $currentModal = document.getElementById(_self.config.idDOM);
 
     var $currentOverlay = $currentModal.getElementsByClassName(overlayClass)[0];
-    
+
     $currentOverlay.style.display = 'none';
   }
 
@@ -55,10 +58,10 @@
     var $currentModal = document.getElementById(_self.config.idDOM);
 
     var $currentOverlay = $currentModal.getElementsByClassName(overlayClass)[0];
-    
+
     $currentOverlay.style.display = 'block';
   }
-  
+
 
   inceptionObject.prototype.config = {};
   inceptionObject.prototype.modalHtml = '';
@@ -148,6 +151,14 @@
 
   // Private functions
 
+  var _updateConfigs = function (oldConfig, newConfig) {
+    var configs = {};
+
+    configs = Object.assign(configs, oldConfig, newConfig);
+
+    return configs;
+  }
+
   var _createOverlay = function (overlayColor, opacity) {
     opacity = parseFloat(opacity);
     var $overlay = document.createElement('div');
@@ -164,20 +175,21 @@
     $content.className = contentClass;
     $content.innerHTML = config.innerHTML;
 
-    _setModalStyles($content, config);
-
     return $content;
   }
 
-  var _setModalStyles = function ($content, config) {
-    if (!config.fullScreen) {
-      $content.style.width = config.width;
-      $content.style.height = config.height;
-    }
-  }
+  var _setModalStyles = function ($currentModal, width, height, fullScreen) {
+    var $content = $currentModal.getElementsByClassName(contentClass)[0];
 
-  var _setModalFullScreen = function ($currentInception) {
-    $currentInception.className += ' ' + fullScreenClass;
+    if (!fullScreen) {
+      $content.style.width = width;
+      $content.style.height = height;
+      $currentModal.classList.remove(fullScreenClass);
+    } else {
+      $content.style.width = '100%';
+      $content.style.height = '100vh';
+      $currentModal.className += ' ' + fullScreenClass;
+    }
   }
 
   var _createModalHtml = function (config) {
@@ -187,9 +199,6 @@
 
     var $overlay = _createOverlay(config.overlayColor, config.opacity);
     var $content = _createContent(config);
-
-    if (config.fullScreen)
-      _setModalFullScreen($currentInception);
 
     $currentInception.appendChild($overlay);
     $currentInception.appendChild($content);
@@ -219,12 +228,72 @@
     return _destinationConfig;
   }
 
+  var _sortNumber = function (a, b) {
+    return a - b;
+  }
+
+  var _getBreakpointRange = function (breakpoint) {
+
+    var breakpointsRange = [320, 768, 990, 1200];
+
+    breakpointsRange.push(breakpoint);
+    breakpointsRange.sort(_sortNumber);
+
+    breakpointsRange = breakpointsRange.filter(function (elem, index, self) {
+      return index == self.indexOf(elem);
+    })
+
+    var nextBreakpoint = breakpointsRange.indexOf(breakpoint) + 1;
+    return breakpointsRange[nextBreakpoint];
+  }
+
+  var _responsiveModalProps = function (config, $currentModal, breakpoint) {
+    breakpoint = parseInt(breakpoint);
+    var maxBreakpoint = _getBreakpointRange(breakpoint),
+      currentBreakpoint = config.responsive[breakpoint],
+      width = config.width,
+      height = config.height,
+      fullScreen = config.fullScreen;
+
+    if (breakpoint < 1200) {
+      if (window.innerWidth > breakpoint && window.innerWidth < maxBreakpoint) {
+        if (currentBreakpoint.width !== undefined)
+          width = currentBreakpoint.width;
+        if (currentBreakpoint.height !== undefined)
+          height = currentBreakpoint.height;
+        if (currentBreakpoint.fullScreen)
+          fullScreen = currentBreakpoint.fullScreen;
+      }
+
+      _setModalStyles(
+        $currentModal,
+        width,
+        height,
+        fullScreen
+      );
+    }
+  }
+
+
+  var _resizeModalListener = function (config, $currentModal) {
+    var breakpoints = Object.keys(config.responsive);
+
+    breakpoints.forEach(function (breakpoint) {
+      _responsiveModalProps(config, $currentModal, breakpoint);
+      window.addEventListener('resize', function () {
+        _responsiveModalProps(config, $currentModal, breakpoint);
+      }, this)
+    }, this);
+  }
+
 
   // Methods
 
   inception.create = function (config) {
     var _currentConfig = _getConfig(config);
     var $htmlModal = _createModalHtml(_currentConfig);
+
+    _setModalStyles($htmlModal, _currentConfig.width, _currentConfig.height, _currentConfig.fullScreen);
 
     return _inceptionObject(_currentConfig, $htmlModal);
   }
@@ -233,7 +302,7 @@
     _destroyOverlay();
   }
 
-  inception.close = function(id) {
+  inception.close = function (id) {
     var $mainObj = document.getElementById(id);
     $mainObj.remove();
   }
