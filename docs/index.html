@@ -26,7 +26,8 @@
         }
       },
       onOpen: function (){
-        var _self = this;
+        var _self = this;        
+        inception.getModal(_self.idDOM);
         document.getElementById('btnInceptionClose').addEventListener('click', function (){
           inception.close(_self.idDOM);
         });
@@ -44,6 +45,7 @@
             },
             onOpen: function (){
               var _self = this;
+              inception.getModal(_self.idDOM);
               document.getElementById('btnInception2Close').addEventListener('click', function (){
                 inception.close(_self.idDOM);
                 myModal.openOverlay();
@@ -56,6 +58,7 @@
       }
     });
     
+    console.log(myModal);
     myModal.show();    
   });
 </script>

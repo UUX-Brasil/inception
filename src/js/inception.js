@@ -306,11 +306,21 @@
     var $mainObj = document.getElementById(id);
     $mainObj.remove();
   };
-  
-  inception.destroyAll = function() {
-    var modals = document.querySelectorAll('.'+ mainClass);
 
-    Object.keys(modals).map(function(objectKey, index) {
+  inception.getModals = function () {
+    var modals = document.querySelectorAll('.' + mainClass);
+
+    return modals;
+  };
+
+  inception.getModal = function (id) {
+    return document.getElementById(id);
+  };
+
+  inception.destroyAll = function () {
+    var modals = document.querySelectorAll('.' + mainClass);
+
+    Object.keys(modals).map(function (objectKey, index) {
       console.log(modals[objectKey].remove());
     });
   };
