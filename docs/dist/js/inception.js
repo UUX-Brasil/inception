@@ -313,6 +313,14 @@
     var $mainObj = document.getElementById(id);
     $mainObj.remove();
   };
+  
+  inception.destroyAll = function() {
+    var modals = document.querySelectorAll('.'+ mainClass);
+
+    Object.keys(modals).map(function(objectKey, index) {
+      console.log(modals[objectKey].remove());
+    });
+  };
 
   return inception;
 
