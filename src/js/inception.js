@@ -39,6 +39,16 @@
     _self.config.onClose();
   };
 
+  inceptionObject.prototype.updateHTML = function(newContent, callback) {
+    var _self = this;
+
+    _self.config.innerHTML = newContent;
+    _self.modalHtml = _createModalHtml(_self.config);
+
+    if(callback)
+      callback();
+  };
+
   inceptionObject.prototype.closeOverlay = function () {
     var _self = this;
     var $currentModal = document.getElementById(_self.config.idDOM);
@@ -77,7 +87,8 @@
     mainId = 'modal',
     overlayClass = 'inception-overlay',
     contentClass = 'inception-content',
-    fullScreenClass = 'full-screen';
+    fullScreenClass = 'full-screen',
+    modalList = [];
 
   // Default config
 
@@ -295,7 +306,11 @@
 
     _setModalStyles($htmlModal, _currentConfig.width, _currentConfig.height, _currentConfig.fullScreen);
 
-    return _inceptionObject(_currentConfig, $htmlModal);
+    var currentModal = _inceptionObject(_currentConfig, $htmlModal);
+
+    modalList.push(currentModal);
+
+    return currentModal;
   };
 
   inception.destroy = function () {

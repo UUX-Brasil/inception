@@ -12,10 +12,14 @@
 </head>
 
 <body>
-  <button id="callModal">Chamar modal</button>
+  <button id="createModal">Criar Modal</button>
+  <button id="updateModal">Update modal</button>
+  <button id="showModal">Chamar modal</button>
   <script type="text/javascript">
-  document.getElementById('callModal').addEventListener("click", function(event) {
-    var myModal = inception.create({
+  var myModal = null;
+
+  document.getElementById('createModal').addEventListener("click", function(event) {
+    myModal = inception.create({
       innerHTML: '<div><h2>Hello world!</h2><button id="btnInceptionClose">Fechar</button></div><button id="btnNewModal">Abrir novo modal</button>',
 	    selector: document.body,
       overlayColor: '#000',
@@ -56,10 +60,15 @@
           myModal.closeOverlay();
         });
       }
-    });
-    
-    console.log(myModal);
-    myModal.show();    
+    });    
+  });
+
+  document.getElementById('updateModal').addEventListener('click', function(event) {
+      myModal.updateHTML('<h2>Modal novo</h2>', function() {console.log(myModal)})
+  });
+
+  document.getElementById('showModal').addEventListener('click', function(event){
+    myModal.show();
   });
 </script>
 </body>
