@@ -9,3 +9,6 @@ test/coverage
 ._*
 .Spotlight-V100
 .Trashes
+
+# Folders
+dist
