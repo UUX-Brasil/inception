@@ -16,7 +16,8 @@
   <button id="updateModal">Update modal</button>
   <button id="showModal">Chamar modal</button>
   <script type="text/javascript">
-  var myModal = null;
+  var myModal = null,
+      myModal2 = null;
 
   document.getElementById('createModal').addEventListener("click", function(event) {
     myModal = inception.create({
@@ -33,11 +34,11 @@
         var _self = this;        
         inception.getModal(_self.idDOM);
         document.getElementById('btnInceptionClose').addEventListener('click', function (){
-          inception.close(_self.idDOM);
+          myModal.close();
         });
 
         document.getElementById('btnNewModal').addEventListener('click', function (){
-          var myModal2 = inception.create({
+          myModal2 = inception.create({
             innerHTML: '<div><h2>Novo Modal</h2><button id="btnInception2Close">Fechar primeiro modal</button></div>',
             selector: document.body,
             overlayColor: '#F60',
@@ -50,8 +51,8 @@
             onOpen: function (){
               var _self = this;
               inception.getModal(_self.idDOM);
-              document.getElementById('btnInception2Close').addEventListener('click', function (){
-                inception.close(_self.idDOM);
+              document.getElementById('btnInception2Close').addEventListener('click', function (){                
+                inception.destroy(_self.idDOM);
                 myModal.openOverlay();
               });
             }

@@ -24,6 +24,7 @@
 
     selector.appendChild(_self.modalHtml);
 
+    _self.isOpen = true;
     _self.config.onOpen();
   };
 
@@ -36,6 +37,7 @@
     else
       throw 'Modal not found!';
 
+    _self.isOpen = false;
     _self.config.onClose();
   };
 
@@ -65,9 +67,9 @@
     var $currentOverlay = $currentModal.getElementsByClassName(overlayClass)[0];
 
     $currentOverlay.style.display = 'block';
-  };
+  };  
 
-
+  inceptionObject.prototype.isOpen = false,
   inceptionObject.prototype.config = {};
   inceptionObject.prototype.modalHtml = '';
 
@@ -308,13 +310,15 @@
 
     var currentModal = _inceptionObject(_currentConfig, $htmlModal);
 
-    modalList.push(currentModal);
+    modalList[_currentConfig.idDOM] = currentModal;
 
     return currentModal;
   };
 
-  inception.destroy = function () {
-    _destroyOverlay();
+  inception.destroy = function (id) {
+    delete modalList[id];
+
+    this.close(id);
   };
 
   inception.close = function (id) {
@@ -323,17 +327,17 @@
   };
 
   inception.getModals = function () {
-    var modals = document.querySelectorAll('.' + mainClass);
-
-    return modals;
+    return modalList;
   };
 
   inception.getModal = function (id) {
-    return document.getElementById(id);
+    return modalList[id];
   };
 
   inception.destroyAll = function () {
     var modals = document.querySelectorAll('.' + mainClass);
+
+    modalList = [];
 
     Object.keys(modals).map(function (objectKey, index) {
       console.log(modals[objectKey].remove());
