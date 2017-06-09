@@ -24,6 +24,7 @@
 
     selector.appendChild(_self.modalHtml);
 
+    _self.isOpen = true;
     _self.config.onOpen();
   };
 
@@ -36,7 +37,18 @@
     else
       throw 'Modal not found!';
 
+    _self.isOpen = false;
     _self.config.onClose();
+  };
+
+  inceptionObject.prototype.updateHTML = function(newContent, callback) {
+    var _self = this;
+
+    _self.config.innerHTML = newContent;
+    _self.modalHtml = _createModalHtml(_self.config);
+
+    if(callback)
+      callback();
   };
 
   inceptionObject.prototype.closeOverlay = function () {
@@ -55,9 +67,9 @@
     var $currentOverlay = $currentModal.getElementsByClassName(overlayClass)[0];
 
     $currentOverlay.style.display = 'block';
-  };
+  };  
 
-
+  inceptionObject.prototype.isOpen = false,
   inceptionObject.prototype.config = {};
   inceptionObject.prototype.modalHtml = '';
 
@@ -77,7 +89,8 @@
     mainId = 'modal',
     overlayClass = 'inception-overlay',
     contentClass = 'inception-content',
-    fullScreenClass = 'full-screen';
+    fullScreenClass = 'full-screen',
+    modalList = [];
 
   // Default config
 
@@ -295,16 +308,40 @@
 
     _setModalStyles($htmlModal, _currentConfig.width, _currentConfig.height, _currentConfig.fullScreen);
 
-    return _inceptionObject(_currentConfig, $htmlModal);
+    var currentModal = _inceptionObject(_currentConfig, $htmlModal);
+
+    modalList[_currentConfig.idDOM] = currentModal;
+
+    return currentModal;
   };
 
-  inception.destroy = function () {
-    _destroyOverlay();
+  inception.destroy = function (id) {
+    delete modalList[id];
+
+    this.close(id);
   };
 
   inception.close = function (id) {
     var $mainObj = document.getElementById(id);
     $mainObj.remove();
+  };
+
+  inception.getModals = function () {
+    return modalList;
+  };
+
+  inception.getModal = function (id) {
+    return modalList[id];
+  };
+
+  inception.destroyAll = function () {
+    var modals = document.querySelectorAll('.' + mainClass);
+
+    modalList = [];
+
+    Object.keys(modals).map(function (objectKey, index) {
+      console.log(modals[objectKey].remove());
+    });
   };
 
   return inception;

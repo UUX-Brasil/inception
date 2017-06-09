@@ -12,10 +12,15 @@
 </head>
 
 <body>
-  <button id="callModal">Chamar modal</button>
+  <button id="createModal">Criar Modal</button>
+  <button id="updateModal">Update modal</button>
+  <button id="showModal">Chamar modal</button>
   <script type="text/javascript">
-  document.getElementById('callModal').addEventListener("click", function(event) {
-    var myModal = inception.create({
+  var myModal = null,
+      myModal2 = null;
+
+  document.getElementById('createModal').addEventListener("click", function(event) {
+    myModal = inception.create({
       innerHTML: '<div><h2>Hello world!</h2><button id="btnInceptionClose">Fechar</button></div><button id="btnNewModal">Abrir novo modal</button>',
 	    selector: document.body,
       overlayColor: '#000',
@@ -26,13 +31,14 @@
         }
       },
       onOpen: function (){
-        var _self = this;
+        var _self = this;        
+        inception.getModal(_self.idDOM);
         document.getElementById('btnInceptionClose').addEventListener('click', function (){
-          inception.close(_self.idDOM);
+          myModal.close();
         });
 
         document.getElementById('btnNewModal').addEventListener('click', function (){
-          var myModal2 = inception.create({
+          myModal2 = inception.create({
             innerHTML: '<div><h2>Novo Modal</h2><button id="btnInception2Close">Fechar primeiro modal</button></div>',
             selector: document.body,
             overlayColor: '#F60',
@@ -44,8 +50,9 @@
             },
             onOpen: function (){
               var _self = this;
-              document.getElementById('btnInception2Close').addEventListener('click', function (){
-                inception.close(_self.idDOM);
+              inception.getModal(_self.idDOM);
+              document.getElementById('btnInception2Close').addEventListener('click', function (){                
+                inception.destroy(_self.idDOM);
                 myModal.openOverlay();
               });
             }
@@ -54,9 +61,15 @@
           myModal.closeOverlay();
         });
       }
-    });
-    
-    myModal.show();    
+    });    
+  });
+
+  document.getElementById('updateModal').addEventListener('click', function(event) {
+      myModal.updateHTML('<h2>Modal novo</h2>', function() {console.log(myModal)})
+  });
+
+  document.getElementById('showModal').addEventListener('click', function(event){
+    myModal.show();
   });
 </script>
 </body>
