@@ -16,6 +16,9 @@ import eslint from 'gulp-eslint';
 import concat from 'gulp-concat';
 import uglify from 'gulp-uglify';
 
+//Test
+import karma from 'gulp-karma';
+
 //CSS
 import sass from 'gulp-sass';
 import sourcemaps from 'gulp-sourcemaps';
@@ -53,6 +56,14 @@ gulp.task('clean:docs', () => {
   return del.sync(`${configs.demo.output}/dist/`);
 });
 
+// Remove pre-existing content from text folders
+gulp.task('clean:test', () => {
+  del.sync([
+    configs.test.coverage,
+    configs.test.results
+  ]);
+});
+
 // Copy distribution files to docs
 gulp.task('copy:dist', ['compile'], () => {
   return gulp.src(configs.output + '/**')
@@ -61,6 +72,17 @@ gulp.task('copy:dist', ['compile'], () => {
     .pipe(browserSync.stream());
 });
 
+// Run unit tests
+gulp.task('test:scripts', () => {
+  return gulp.src([configs.test.input].concat([configs.test.spec]))
+    .pipe(plumber())
+    .pipe(karma({
+      configFile: configs.test.karma
+    }))
+    .on('error', function (err) {
+      throw err;
+    });
+});
 
 // Process, lint, and minify Sass files
 gulp.task('build:styles', ['clean:dist'], () => {
@@ -131,8 +153,6 @@ gulp.task('lint:scripts', () => {
     .pipe(eslint.failAfterError());
 });
 
-gulp.task('build:demo', ['compile', 'copy:dist', 'listen:demo']);
-
 gulp.task('listen:demo', () => {
   browserSync.init({
     server: configs.demo.output
@@ -144,3 +164,15 @@ gulp.task('listen:demo', () => {
 });
 
 gulp.task('compile', ['build:scripts', 'build:styles']);
+
+gulp.task('build:demo', ['compile', 'copy:dist', 'listen:demo']);
+
+gulp.task('default', [
+    'build:demo'
+]);
+
+// Run unit tests
+gulp.task('test', [
+    'default',
+    'test:scripts'
+]);

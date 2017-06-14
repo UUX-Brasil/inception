@@ -1,7 +1,7 @@
 {
   "input": "./src/**/*",
   "output": "./dist/",
-  
+
   "styles": {
     "main": "./src/sass/inception.scss",
     "input": "./src/sass/**/*.{scss,sass}",
@@ -15,8 +15,15 @@
     "lint": "./src/js/**"
   },
 
-  "demo": {    
+  "demo": {
     "output": "./docs/",
-    "html": "docs/**/*.html"        
+    "html": "docs/**/*.html"
+  },
+  "test": {
+    "input": "src/js/**/*.js",
+    "karma": "test/karma.conf.js",
+    "spec": "test/spec/**/*.js",
+    "coverage": "test/coverage/",
+    "results": "test/results/"
   }
 }
