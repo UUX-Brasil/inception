@@ -16,8 +16,6 @@ import eslint from 'gulp-eslint';
 import concat from 'gulp-concat';
 import uglify from 'gulp-uglify';
 
-//Test
-import karma from 'gulp-karma';
 
 //CSS
 import sass from 'gulp-sass';
@@ -28,6 +26,7 @@ import prefix from 'gulp-autoprefixer';
 //Config files
 const configs = require('./configs.json');
 const packages = require('./package.json');
+var Server = require('karma').Server;
 
 const headerCredits = {
   full: '/*!\n' +
@@ -72,17 +71,13 @@ gulp.task('copy:dist', ['compile'], () => {
     .pipe(browserSync.stream());
 });
 
-// Run unit tests
-gulp.task('test:scripts', () => {
-  return gulp.src([configs.test.input].concat([configs.test.spec]))
-    .pipe(plumber())
-    .pipe(karma({
-      configFile: configs.test.karma
-    }))
-    .on('error', function (err) {
-      throw err;
-    });
+
+gulp.task('test:scripts', (done) => {
+  new Server({
+    configFile: __dirname + configs.test.karma
+  }, done).start();
 });
+
 
 // Process, lint, and minify Sass files
 gulp.task('build:styles', ['clean:dist'], () => {
