@@ -5,16 +5,13 @@ describe('Inception', function () {
   };
 
   describe('Internal method', function () {
-
-    beforeEach(function () {
+    it('Should have create', function (done) {
       inception.create({
         innerHTML: '<div><h2>Hello world!</h2><button id="btnInceptionClose">Fechar</button></div><button id="btnNewModal">Abrir novo modal</button>',
         selector: document.body
       });
-    });
-
-    it('Should have create', function () {
       expect(!!inception).toBe(true);
+      done();
     });
   });
 
@@ -33,8 +30,10 @@ describe('Inception', function () {
 
       modal.show();
       expect(hasElement('#' + modal.config.idDOM)).toBe(true);
-      
+
       done();
+
+      modal.close();
     });
 
     it('Should have closed', function (done) {
@@ -61,7 +60,46 @@ describe('Inception', function () {
       myModal.updateHTML('<h2>Modal novo</h2>');
       expect(myModal.config.innerHTML).toEqual('<h2>Modal novo</h2>');
 
+      done();      
+    });
+
+    it('Should have close overlay', function (done) {
+      var modal = inception.create({
+        innerHTML: '<div><h2>Hello world!</h2><button id="btnInceptionClose">Fechar</button></div><button id="btnNewModal">Abrir novo modal</button>',
+        selector: document.body
+      });
+
+      modal.show();
+      modal.closeOverlay();
+
+      var currentModal = document.getElementById(modal.config.idDOM),
+          overlayDisplay = currentModal.querySelector('.inception-overlay').style.display;                  
+
+      expect(hasElement('#' + modal.config.idDOM)).toBe(true);      
+      expect(overlayDisplay).toEqual('none');
       done();
+      
+      modal.close();
+    });
+
+    it('Should have open overlay', function (done) {
+      var modal = inception.create({
+        innerHTML: '<div><h2>Hello world!</h2><button id="btnInceptionClose">Fechar</button></div><button id="btnNewModal">Abrir novo modal</button>',
+        selector: document.body
+      });
+
+      modal.show();
+      modal.closeOverlay();
+      modal.openOverlay();
+      
+      var currentModal = document.getElementById(modal.config.idDOM),
+          overlayDisplay = currentModal.querySelector('.inception-overlay').style.display;                  
+
+      expect(hasElement('#' + modal.config.idDOM)).toBe(true);      
+      expect(overlayDisplay).toEqual('block');
+      done();
+
+      modal.close();
     });
   });
 

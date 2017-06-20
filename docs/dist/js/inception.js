@@ -5,12 +5,7 @@
  * git+https://github.com/UUX-Brasil/inception.git
  */
 
-(function (root, factory) {
-  if (typeof define === 'function' && define.amd)
-    define([], factory(root));
-  else if (typeof exports === 'object')
-    module.exports = factory(root);
-  else
+(function (root, factory) {  
     root.inception = factory(root);
 })(typeof global !== 'undefined' ? global : this.window || this.global, function (root) {
 
@@ -104,7 +99,7 @@
   };
 
   inceptionObject.prototype.isOpen = false,
-    inceptionObject.prototype.config = {};
+  inceptionObject.prototype.config = {};
   inceptionObject.prototype.modalHtml = '';
 
 
@@ -193,14 +188,6 @@
 
   // Private functions
 
-  var _updateConfigs = function (oldConfig, newConfig) {
-    var configs = {};
-
-    configs = Object.assign(configs, oldConfig, newConfig);
-
-    return configs;
-  };
-
   var _createOverlay = function (overlayColor, opacity) {
     opacity = parseFloat(opacity);
     var $overlay = document.createElement('div');
@@ -258,11 +245,6 @@
 
   var _getMainId = function (id) {
     return mainId + id;
-  };
-
-  var _destroyOverlay = function () {
-    if (document.getElementsByClassName('inception-overlay').length === 1)
-      document.getElementsByClassName('inception-overlay').remove();
   };
 
   var _getConfig = function (config) {
