@@ -33,6 +33,7 @@ describe('Inception', function () {
 
       modal.show();
       expect(hasElement('#' + modal.config.idDOM)).toBe(true);
+      
       done();
     });
 
@@ -44,8 +45,22 @@ describe('Inception', function () {
 
       modal.show();
       expect(hasElement('#' + modal.config.idDOM)).toBe(true);
+
       modal.close();
       expect(hasElement('#' + modal.config.idDOM)).toBe(false);
+
+      done();
+    });
+
+    it('Should have update', function (done) {
+      var myModal = inception.create({
+        innerHTML: '<div><h2>Hello world!</h2><button id="btnInceptionClose">Fechar</button></div><button id="btnNewModal">Abrir novo modal</button>',
+        selector: document.body
+      });
+
+      myModal.updateHTML('<h2>Modal novo</h2>');
+      expect(myModal.config.innerHTML).toEqual('<h2>Modal novo</h2>');
+
       done();
     });
   });

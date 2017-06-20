@@ -10,6 +10,33 @@
   // Errors
 
 
+  // Polyfill
+
+  if (typeof Object.assign != 'function') {
+    Object.assign = function (target, varArgs) { // .length of function is 2
+      'use strict';
+      if (target === null) { // TypeError if undefined or null
+        throw new TypeError('Cannot convert undefined or null to object');
+      }
+
+      var to = Object(target);
+
+      for (var index = 1; index < arguments.length; index++) {
+        var nextSource = arguments[index];
+
+        if (nextSource !== null) { // Skip over if undefined or null
+          for (var nextKey in nextSource) {
+            // Avoid bugs when hasOwnProperty is shadowed
+            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey))
+              to[nextKey] = nextSource[nextKey];            
+          }
+        }
+      }
+      return to;
+    };
+  }
+
+
   // Inception Object
 
   var inceptionObject = function () {};
@@ -41,13 +68,13 @@
     _self.config.onClose();
   };
 
-  inceptionObject.prototype.updateHTML = function(newContent, callback) {
+  inceptionObject.prototype.updateHTML = function (newContent, callback) {
     var _self = this;
 
     _self.config.innerHTML = newContent;
     _self.modalHtml = _createModalHtml(_self.config);
 
-    if(callback)
+    if (callback)
       callback();
   };
 
@@ -67,10 +94,10 @@
     var $currentOverlay = $currentModal.getElementsByClassName(overlayClass)[0];
 
     $currentOverlay.style.display = 'block';
-  };  
+  };
 
   inceptionObject.prototype.isOpen = false,
-  inceptionObject.prototype.config = {};
+    inceptionObject.prototype.config = {};
   inceptionObject.prototype.modalHtml = '';
 
 
