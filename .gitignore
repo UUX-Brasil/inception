@@ -1,7 +1,5 @@
 # Node
 node_modules
-test/results
-test/coverage
 
 
 ## OS X
@@ -13,3 +11,5 @@ test/coverage
 
 # Folders
 dist
+test/results
+test/coverage

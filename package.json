@@ -33,8 +33,7 @@
     "gulp-cssnano": "^2.1.2",
     "gulp-eslint": "^3.0.1",
     "gulp-flatten": "^0.3.1",
-    "gulp-header": "^1.8.8",
-    "gulp-karma": "^0.0.4",
+    "gulp-header": "^1.8.8",    
     "gulp-plumber": "^1.1.0",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
@@ -47,10 +46,8 @@
     "karma-chrome-launcher": "1.x || ^0.2.0",
     "karma-coverage": "^0.4.2",
     "karma-htmlfile-reporter": "^0.2.1",
-    "karma-jasmine": "1.x || ^0.3.6",
-    "karma-phantomjs-launcher": "^0.2.0",
+    "karma-jasmine": "1.x || ^0.3.6",    
     "karma-spec-reporter": "^0.0.19",
-    "lazypipe": "^1.0.1",
-    "phantomjs": "^1.9.19"
+    "lazypipe": "^1.0.1",    
   }
 }
