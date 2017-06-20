@@ -344,10 +344,6 @@
     });
   };
 
-  inception.teste = function() {
-    console.log('teste');
-  }
-
   return inception;
 
 });
