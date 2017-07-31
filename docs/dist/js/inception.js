@@ -17,6 +17,33 @@
   // Errors
 
 
+  // Polyfill
+
+  if (typeof Object.assign != 'function') {
+    Object.assign = function (target, varArgs) { // .length of function is 2
+      'use strict';
+      if (target === null) { // TypeError if undefined or null
+        throw new TypeError('Cannot convert undefined or null to object');
+      }
+
+      var to = Object(target);
+
+      for (var index = 1; index < arguments.length; index++) {
+        var nextSource = arguments[index];
+
+        if (nextSource !== null) { // Skip over if undefined or null
+          for (var nextKey in nextSource) {
+            // Avoid bugs when hasOwnProperty is shadowed
+            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey))
+              to[nextKey] = nextSource[nextKey];            
+          }
+        }
+      }
+      return to;
+    };
+  }
+
+
   // Inception Object
 
   var inceptionObject = function () {};
@@ -48,13 +75,13 @@
     _self.config.onClose();
   };
 
-  inceptionObject.prototype.updateHTML = function(newContent, callback) {
+  inceptionObject.prototype.updateHTML = function (newContent, callback) {
     var _self = this;
 
     _self.config.innerHTML = newContent;
     _self.modalHtml = _createModalHtml(_self.config);
 
-    if(callback)
+    if (callback)
       callback();
   };
 
@@ -74,7 +101,7 @@
     var $currentOverlay = $currentModal.getElementsByClassName(overlayClass)[0];
 
     $currentOverlay.style.display = 'block';
-  };  
+  };
 
   inceptionObject.prototype.isOpen = false,
   inceptionObject.prototype.config = {};
@@ -108,7 +135,10 @@
     selector: document.body,
     height: '240px',
     width: '350px',
-    fullScreen: false,
+    fullScreen: {
+      enable: false,
+      scroll: false
+    },
     opacity: 0.5,
     overlayColor: '#FFF',
     position: 'center',
@@ -166,14 +196,6 @@
 
   // Private functions
 
-  var _updateConfigs = function (oldConfig, newConfig) {
-    var configs = {};
-
-    configs = Object.assign(configs, oldConfig, newConfig);
-
-    return configs;
-  };
-
   var _createOverlay = function (overlayColor, opacity) {
     opacity = parseFloat(opacity);
     var $overlay = document.createElement('div');
@@ -199,13 +221,16 @@
   var _setModalStyles = function ($currentModal, width, height, fullScreen) {
     var $content = $currentModal.getElementsByClassName(contentClass)[0];
 
-    if (!fullScreen) {
+    if (!fullScreen.enable) {
       $content.style.width = width;
       $content.style.height = height;
       $currentModal.classList.remove(fullScreenClass);
     } else {
       $content.style.width = '100%';
       $content.style.height = '100vh';
+
+      if(fullScreen.scroll)
+        $content.style.overflow = 'scroll';
 
       if (!$currentModal.classList.contains(fullScreenClass))
         $currentModal.className += ' ' + fullScreenClass;
@@ -231,11 +256,6 @@
 
   var _getMainId = function (id) {
     return mainId + id;
-  };
-
-  var _destroyOverlay = function () {
-    if (document.getElementsByClassName('inception-overlay').length === 1)
-      document.getElementsByClassName('inception-overlay').remove();
   };
 
   var _getConfig = function (config) {
