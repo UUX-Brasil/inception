@@ -123,7 +123,10 @@
     selector: document.body,
     height: '240px',
     width: '350px',
-    fullScreen: false,
+    fullScreen: {
+      enable: false,
+      scroll: false
+    },
     opacity: 0.5,
     overlayColor: '#FFF',
     position: 'center',
@@ -206,13 +209,16 @@
   var _setModalStyles = function ($currentModal, width, height, fullScreen) {
     var $content = $currentModal.getElementsByClassName(contentClass)[0];
 
-    if (!fullScreen) {
+    if (!fullScreen.enable) {
       $content.style.width = width;
       $content.style.height = height;
       $currentModal.classList.remove(fullScreenClass);
     } else {
       $content.style.width = '100%';
       $content.style.height = '100vh';
+
+      if(fullScreen.scroll)
+        $content.style.overflow = 'scroll';
 
       if (!$currentModal.classList.contains(fullScreenClass))
         $currentModal.className += ' ' + fullScreenClass;
