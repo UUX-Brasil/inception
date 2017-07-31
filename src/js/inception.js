@@ -223,7 +223,7 @@
       $content.style.height = '100vh';
 
       if(fullScreen.scroll)
-        $content.style.overflow = 'scroll';
+        $content.style.overflowY = 'auto';
 
       if (!$currentModal.classList.contains(fullScreenClass))
         $currentModal.className += ' ' + fullScreenClass;
@@ -267,7 +267,7 @@
 
   var _getBreakpointRange = function (breakpoint) {
 
-    var breakpointsRange = [320, 768, 990, 1200];
+    var breakpointsRange = [300, 768, 990, 1200];
 
     breakpointsRange.push(breakpoint);
     breakpointsRange.sort(_sortNumber);
